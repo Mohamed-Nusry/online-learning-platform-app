@@ -6,7 +6,8 @@
 ## Please follow below steps to initiate the app:
 
 - Clone the repo using `git clone {repo}`
-- Run `npm install` to install required dependencies
+- Run `npm install` to install required dependencies. 
+- Sometimes there is a chance to appear dependency issue mismatch with peer versions. In that case use `npm install --legacy-peer-deps`
 - Run `npm start` to run the app
 - Run `npm run build` to build the app
 
