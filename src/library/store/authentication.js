@@ -6,6 +6,7 @@ import { loginUrl, registerUrl } from "../constant";
 
 const initialState = {
   value: {
+    isLoading: false,
     isLogged: false,
     loginData: null,
     isError: false,
@@ -15,9 +16,13 @@ const initialState = {
 
 export const authenticateUser = createAsyncThunk(
   "authentication/user",
-  async (data, thunkAPI) => {
-    const response = await postMethod(loginUrl, data);
-    return response;
+  async (data,  { rejectWithValue }) => {
+    try{
+      const response = await postMethod(loginUrl, data);
+      return response;
+    } catch(error){
+      return rejectWithValue(error.response)
+    }
   }
 );
 
@@ -47,17 +52,28 @@ export const authenticationSlice = createSlice({
         localStorage.setItem("role", action.payload.data.data.user.type)
         localStorage.setItem("user_id", action.payload.data.data.user.id)
         state.isLogged = true;
+        state.isLoading = false;
+        state.isError = false;
+        state.errorMessage = '';
         state.loginData = action.payload.data.data.user;
       }else{
-        //show error message
+        state.isError = true;
+        state.isLoading = false;
+        state.errorMessage = 'Internal Server Error';
       }
       
     },
     [authenticateUser.rejected]: (state, action) => {
+      state.isError = true;
+      state.errorMessage = action.payload.data.message;
       state.isLogged = false;
+      state.isLoading = false;
       state.loginData = null;
     },
     [authenticateUser.pending]: (state, action) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.errorMessage = '';
       state.isLogged = false;
       state.loginData = null;
     },
@@ -67,9 +83,14 @@ export const authenticationSlice = createSlice({
         localStorage.setItem("role", action.payload.data.data.user.type)
         localStorage.setItem("user_id", action.payload.data.data.user.id)
         state.isLogged = true;
+        state.isLoading = false;
+        state.isError = false;
+        state.errorMessage = '';
         state.loginData = action.payload.data.data.user;
       }else{
-        //show error message
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = 'Internal Server Error';
       }
     },
   },

@@ -13,6 +13,7 @@ import { useHistory } from "react-router-dom";
 import { CheckToken, getRole } from "../library/helper";
 import { authenticateUser } from "../library/store/authentication";
 import { useDispatch, useSelector } from "react-redux";
+import { toastMessage } from "../library/store/toast";
 
 export default function LoginPage() {
   const history = useHistory();
@@ -23,7 +24,7 @@ export default function LoginPage() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required("email is required"),
-    password: Yup.string().required("password is required"),
+    password: Yup.string().min(8).required("password is required"),
   });
 
   useEffect(() => {
@@ -35,6 +36,22 @@ export default function LoginPage() {
           history.push("/user/dashboard");
         }
       }
+    }
+
+    if(loginInfo.isError) {
+      const message = {
+        severity: "error",
+        summary: "Error",
+        detail: loginInfo.errorMessage,
+        life: 3000,
+      };
+      dispatch(toastMessage(message));
+    }
+
+    if(loginInfo.isLoading) {
+      formik.setSubmitting(true);
+    }else{
+      formik.setSubmitting(false);
     }
   }, [loginInfo]);
 

@@ -47,10 +47,6 @@ export const postMethod = async (url, data) => {
     .then(function (response) {
       return response;
     })
-    .catch(function (error) {
-      console.log(error);
-      return error;
-    });
   } catch (error) {
     console.log(error);
     return error;

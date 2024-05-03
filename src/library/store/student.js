@@ -10,6 +10,8 @@ const initialState = {
     isLoading: false,
     isCreateSuccess: false,
     isDeleteSuccess: false,
+    isError: false,
+    errorMessage: '',
   },
 };
 
@@ -64,7 +66,8 @@ export const studentSlice = createSlice({
         state.data = action.payload.data.data.students;
         state.isLoading = false;
       }else{
-        //show error message
+        state.isError = true;
+        state.errorMessage = action.payload.data.message;
       }
     },
     [loadOneStudent.fulfilled]: (state, action) => {
@@ -72,7 +75,8 @@ export const studentSlice = createSlice({
         state.singleData = action.payload.data.data.student;
         state.isLoading = false;
       }else{
-        //show error message
+        state.isError = true;
+        state.errorMessage = action.payload.data.message;
       }
     },
     [createNewStudent.fulfilled]: (state, action) => {
@@ -80,7 +84,8 @@ export const studentSlice = createSlice({
         state.isLoading = false;
         state.isCreateSuccess = true;
       }else{
-        //show error message
+        state.isError = true;
+        state.errorMessage = action.payload.data.message;
       }
     },
     [updateStudent.fulfilled]: (state, action) => {
@@ -88,7 +93,8 @@ export const studentSlice = createSlice({
         state.isLoading = false;
         state.isCreateSuccess = true;
       }else{
-        //show error message
+        state.isError = true;
+        state.errorMessage = action.payload.data.message;
       }
     },
     [deleteStudent.fulfilled]: (state, action) => {
@@ -96,7 +102,8 @@ export const studentSlice = createSlice({
         state.isLoading = false;
         state.isDeleteSuccess = true;
       }else{
-        //show error message
+        state.isError = true;
+        state.errorMessage = action.payload.data.message;
       }
     },
     [getStudentDetails.rejected]: (state, action) => {
